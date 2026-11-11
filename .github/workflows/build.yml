@@ -12,10 +12,13 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.9"
-      - run: for f in *.zip; do unzip -o "$f"; done
-      - run: gradle assembleDebug
-        working-directory: SahSah
+      - name: Build
+        run: |
+          for f in *.zip; do unzip -o "$f"; done
+          ls -R | head -50
+          cd "$(dirname "$(find . -name settings.gradle.kts | head -1)")"
+          gradle assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: SahSah-apk
-          path: SahSah/app/build/outputs/apk/debug/app-debug.apk
+          path: "**/build/outputs/apk/debug/*.apk"
